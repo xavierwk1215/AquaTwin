@@ -1,4 +1,4 @@
-"""Advisor for water-change recommendations."""
+"""Advisor for feeding recommendations."""
 
 from collections.abc import Mapping
 
@@ -8,55 +8,52 @@ from aquatwin.domain.rule_based_advisor import RuleBasedAdvisor
 from aquatwin.domain.water_quality_status import WaterQualityStatus
 
 
-class WaterChangeAdvisor(RuleBasedAdvisor):
-    """Recommend water-change actions from water-quality status."""
+class FeedingAdvisor(RuleBasedAdvisor):
+    """Recommend feeding actions from water-quality status."""
 
-    ADVISOR_NAME = "Water Change Advisor"
+    ADVISOR_NAME = "Feeding Advisor"
 
     @property
     def rules(
         self,
     ) -> Mapping[WaterQualityStatus, AdvisorResult]:
-        """Return water-change rules."""
+        """Return feeding rules."""
         return {
             WaterQualityStatus.EXCELLENT: AdvisorResult(
                 advisor_name=self.ADVISOR_NAME,
                 priority=AdvicePriority.LOW,
-                title="No additional water change is required",
+                title="Continue the normal feeding schedule",
                 message=(
-                    "Water quality is currently excellent. "
-                    "No additional water change is required beyond the "
-                    "normal maintenance schedule."
+                    "Water quality is excellent. Continue the normal "
+                    "feeding schedule while monitoring for uneaten food."
                 ),
             ),
             WaterQualityStatus.ACCEPTABLE: AdvisorResult(
                 advisor_name=self.ADVISOR_NAME,
                 priority=AdvicePriority.MEDIUM,
-                title="Continue the regular water-change schedule",
+                title="Maintain controlled feeding",
                 message=(
-                    "Water quality is currently acceptable. "
-                    "Continue the regular water-change schedule and "
-                    "monitor for any deterioration."
+                    "Water quality is acceptable. Continue controlled "
+                    "feeding and avoid excess food."
                 ),
             ),
             WaterQualityStatus.WARNING: AdvisorResult(
                 advisor_name=self.ADVISOR_NAME,
                 priority=AdvicePriority.HIGH,
-                title="Plan a water change soon",
+                title="Reduce feeding temporarily",
                 message=(
-                    "Water-quality conditions require attention. "
-                    "Plan a partial water change soon and continue "
-                    "monitoring the aquarium."
+                    "Water quality requires attention. Reduce feeding "
+                    "temporarily and remove any uneaten food."
                 ),
             ),
             WaterQualityStatus.CRITICAL: AdvisorResult(
                 advisor_name=self.ADVISOR_NAME,
                 priority=AdvicePriority.CRITICAL,
-                title="Perform an immediate water change",
+                title="Pause feeding temporarily",
                 message=(
                     "Critical water-quality conditions were detected. "
-                    "Perform a partial water change immediately and "
-                    "investigate the underlying cause."
+                    "Pause feeding temporarily to reduce additional "
+                    "organic waste while corrective action is taken."
                 ),
             ),
         }
