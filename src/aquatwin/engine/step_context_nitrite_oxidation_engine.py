@@ -5,11 +5,11 @@ from aquatwin.engine.step_context import StepContext
 
 
 class StepContextNitriteOxidationEngine:
-    """Convert nitrite-N into nitrate-N in the working state."""
+    """Convert nitrite-N into nitrate-N within biofilter capacity."""
 
     @staticmethod
     def apply(context: StepContext) -> None:
-        """Oxidize the configured fraction of current nitrite-N."""
+        """Oxidize nitrite-N using the configured rate and capacity limit."""
         fraction = (
             context.frozen_parameter_set
             .nitrite_oxidation_fraction_per_day
@@ -22,15 +22,51 @@ class StepContextNitriteOxidationEngine:
             )
 
         nitrite_before_mg = context.working_state.nitrite_mass_mg
-        nitrite_oxidized_mg = nitrite_before_mg * fraction
+        potential_nitrite_oxidized_mg = (
+            nitrite_before_mg * fraction
+        )
 
-        context.working_state.nitrite_mass_mg -= nitrite_oxidized_mg
-        context.working_state.nitrate_mass_mg += nitrite_oxidized_mg
+        capacity_metric = next(
+            (
+                metric
+                for metric in reversed(context.metrics)
+                if metric.name
+                == "biofilter_nitrite_capacity_mg_day"
+            ),
+            None,
+        )
 
-        context.metrics.append(
-            DailyMetric(
-                name="nitrite_n_oxidized_mg",
-                value=nitrite_oxidized_mg,
-                unit="mg-N",
+        nitrite_oxidized_mg = potential_nitrite_oxidized_mg
+
+        if capacity_metric is not None:
+            if capacity_metric.value < 0.0:
+                raise ValueError(
+                    "Biofilter nitrite capacity must be non-negative."
+                )
+
+            nitrite_oxidized_mg = min(
+                potential_nitrite_oxidized_mg,
+                capacity_metric.value,
             )
+
+        context.working_state.nitrite_mass_mg -= (
+            nitrite_oxidized_mg
+        )
+        context.working_state.nitrate_mass_mg += (
+            nitrite_oxidized_mg
+        )
+
+        context.metrics.extend(
+            [
+                DailyMetric(
+                    name="potential_nitrite_n_oxidized_mg",
+                    value=potential_nitrite_oxidized_mg,
+                    unit="mg-N",
+                ),
+                DailyMetric(
+                    name="nitrite_n_oxidized_mg",
+                    value=nitrite_oxidized_mg,
+                    unit="mg-N",
+                ),
+            ]
         )
