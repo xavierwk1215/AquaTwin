@@ -1,0 +1,39 @@
+# Python virtual environment
+.venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Test and coverage cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Type checker and linter cache
+.mypy_cache/
+.ruff_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Environment and secret files
+.env
+.env.*
+
+# IDE settings
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# AquaTwin generated outputs
+exports/*
+!exports/.gitkeep
+
+# AquaTwin local data
+data/*
+!data/.gitkeep
