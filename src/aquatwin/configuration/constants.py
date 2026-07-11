@@ -8,3 +8,7 @@ class NitrogenPool(Enum):
     TAN = "TAN-N"
     NITRITE = "Nitrite-N"
     NITRATE = "Nitrate-N"
+
+
+# Unit conversion
+MG_PER_G = 1000.0
