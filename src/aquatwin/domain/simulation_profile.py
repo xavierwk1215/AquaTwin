@@ -18,3 +18,5 @@ class SimulationProfile:
     nitrogen_fraction: SimulationParameter
     oxygen_consumption: SimulationParameter
     waste_factor: SimulationParameter
+
+    metabolic_tan_excretion: SimulationParameter | None = None
