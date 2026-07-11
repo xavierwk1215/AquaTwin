@@ -22,3 +22,5 @@ class FrozenParameterSet:
     ] = ()
 
     organic_n_mineralization_fraction_per_day: float = 0.0
+    tan_oxidation_fraction_per_day: float = 0.0
+    nitrite_oxidation_fraction_per_day: float = 0.0
