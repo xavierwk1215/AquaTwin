@@ -2,9 +2,9 @@ from dataclasses import replace
 
 from aquatwin.domain.tank_state import TankState
 from aquatwin.engine.feeding_engine import FeedingEngine
+from aquatwin.engine.nitrite_oxidation import apply_nitrite_oxidation
 from aquatwin.engine.organic_decay import apply_organic_decay
 from aquatwin.engine.tan_oxidation import apply_tan_oxidation
-
 
 def simulate_day(
     state: TankState,
@@ -13,6 +13,7 @@ def simulate_day(
     nitrogen_conversion_factor: float,
     organic_decay_fraction_per_day: float,
     tan_oxidation_fraction_per_day: float,
+    nitrite_oxidation_fraction_per_day: float,
 ) -> TankState:
     """Run the currently implemented daily simulation steps."""
 
@@ -44,4 +45,9 @@ def simulate_day(
         oxidation_fraction_per_day=tan_oxidation_fraction_per_day,
     )
 
-    return state_after_tan_oxidation
+    state_after_nitrite_oxidation = apply_nitrite_oxidation(
+        state_after_tan_oxidation,
+        oxidation_fraction_per_day=nitrite_oxidation_fraction_per_day,
+    )
+
+    return state_after_nitrite_oxidation
