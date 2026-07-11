@@ -14,8 +14,11 @@ class FrozenParameterSet:
 
     model_version: str
     parameter_set_version: str
+
     simulation_profiles: tuple[SimulationProfile, ...] = ()
     species_simulation_mappings: tuple[
         SpeciesSimulationMapping,
         ...
     ] = ()
+
+    organic_n_mineralization_fraction_per_day: float = 0.0
