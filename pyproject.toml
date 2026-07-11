@@ -1,0 +1,14 @@
+[project]
+name = "aquatwin"
+version = "0.1.0"
+description = "Digital Twin Aquarium Simulator"
+readme = "README.md"
+requires-python = ">=3.14"
+
+authors = [
+    { name = "Xavier Wonkeun Jung", email = "xavierwk1215@gmail.com" }
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
